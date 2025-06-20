@@ -1,0 +1,34 @@
+# Node dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional: Mac system files
+.DS_Store
+
+# Optional: VSCode launch config
+.vscode/launch.json
+
+/src/generated/prisma
