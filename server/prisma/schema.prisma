@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,3 +10,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  fullName         String
+  email            String          @unique
+  password         String
+  bio              String          @default("")
+  profilePic       String          @default("")
+  nativeLanguage   String          @default("")
+  learningLanguage String          @default("")
+  location         String          @default("")
+  isOnboarded      Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  friends          User[]          @relation("UserFriends", fields: [friendIds], references: [id])
+  friendOf         User[]          @relation("UserFriends", fields: [friendOfIds], references: [id])
+  friendIds        String[]        @db.ObjectId
+  friendOfIds      String[]        @db.ObjectId
+  sentRequests     FriendRequest[] @relation("SentRequests")
+  receivedRequests FriendRequest[] @relation("ReceivedRequests")
+
+  @@map("users")
+}
+
+model FriendRequest {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  senderId    String              @db.ObjectId
+  recipientId String              @db.ObjectId
+  status      FriendRequestStatus @default(PENDING)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  sender      User                @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   User                @relation("ReceivedRequests", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, recipientId])
+  @@map("friend_requests")
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+}
