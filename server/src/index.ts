@@ -27,7 +27,7 @@ app.use(morgan("dev"));
 
 // Importing the routes
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
 app.get("/", (req: Request, res: Response) => {

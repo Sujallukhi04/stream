@@ -8,11 +8,13 @@ import ChatPage from "./pages/ChatPage";
 import Onboarding from "./pages/Onboarding";
 import { Toaster } from "sonner";
 import useAuthUser from "./hook/useAuthUser";
+import Layout from "./components/Layout";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
 
   const authicated = Boolean(authUser);
+  const isBoarding = authUser?.isOnboarded;
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -21,15 +23,35 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={authicated ? <Home /> : <Navigate to="/login" />}
+          element={
+            authicated && isBoarding ? (
+              <Layout showSidebar={true}>
+                <Home />
+              </Layout>
+            ) : (
+              <Navigate to={!authicated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/signup"
-          element={!authicated ? <Signup /> : <Navigate to="/" />}
+          element={
+            !authicated ? (
+              <Signup />
+            ) : (
+              <Navigate to={isBoarding ? "/" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/login"
-          element={!authicated ? <Login /> : <Navigate to="/" />}
+          element={
+            !authicated ? (
+              <Login />
+            ) : (
+              <Navigate to={isBoarding ? "/" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/notifications"
@@ -45,7 +67,17 @@ function App() {
         />
         <Route
           path="/onboarding"
-          element={!authicated ? <Onboarding /> : <Navigate to="/" />}
+          element={
+            authicated ? (
+              !isBoarding ? (
+                <Onboarding />
+              ) : (
+                <Navigate to="/" />
+              )
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
       <Toaster richColors />

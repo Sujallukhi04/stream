@@ -25,8 +25,6 @@ export const getRecommandedUsers = async (
       currentUserId!,
       ...(currentUser.friendIds ?? []),
       ...(currentUser.friendOfIds ?? []),
-      ...(currentUser.sentRequests?.map((r) => r.recipientId) ?? []),
-      ...(currentUser.receivedRequests?.map((r) => r.senderId) ?? []),
     ]);
 
     const recommandedUsers = await db.user.findMany({
@@ -35,6 +33,8 @@ export const getRecommandedUsers = async (
         isOnboarded: true,
       },
     });
+
+    
 
     res.status(200).json(recommandedUsers);
   } catch (error) {
@@ -255,6 +255,7 @@ export const getOutgoingFriendReqs = async (
       include: {
         recipient: {
           select: {
+            id: true,
             fullName: true,
             profilePic: true,
             nativeLanguage: true,
