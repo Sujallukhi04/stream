@@ -9,6 +9,7 @@ import Onboarding from "./pages/Onboarding";
 import { Toaster } from "sonner";
 import useAuthUser from "./hook/useAuthUser";
 import Layout from "./components/Layout";
+import NotificationsPage from "./pages/NotificationPage";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
@@ -55,15 +56,37 @@ function App() {
         />
         <Route
           path="/notifications"
-          element={!authicated ? <NotificationPage /> : <Navigate to="/" />}
+          element={
+            authicated && isBoarding ? (
+              <Layout showSidebar={true}>
+                <NotificationsPage />
+              </Layout>
+            ) : (
+              <Navigate to={!authicated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
-          path="/call"
-          element={!authicated ? <CallPage /> : <Navigate to="/" />}
+          path="/call/:id"
+          element={
+            authicated && isBoarding ? (
+              <CallPage />
+            ) : (
+              <Navigate to={!authicated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
-          path="/chat"
-          element={!authicated ? <ChatPage /> : <Navigate to="/" />}
+          path="/chat/:id"
+          element={
+            authicated && isBoarding ? (
+              <Layout showSidebar={false}>
+                <ChatPage />
+              </Layout>
+            ) : (
+              <Navigate to={!authicated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/onboarding"

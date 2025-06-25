@@ -16,6 +16,8 @@ export const getRecommandedUsers = async (
       },
     });
 
+    console.log(currentUser);
+
     if (!currentUser) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -25,6 +27,7 @@ export const getRecommandedUsers = async (
       currentUserId!,
       ...(currentUser.friendIds ?? []),
       ...(currentUser.friendOfIds ?? []),
+      ...currentUser.receivedRequests.map((r) => r.senderId),
     ]);
 
     const recommandedUsers = await db.user.findMany({
@@ -33,8 +36,6 @@ export const getRecommandedUsers = async (
         isOnboarded: true,
       },
     });
-
-    
 
     res.status(200).json(recommandedUsers);
   } catch (error) {
@@ -224,7 +225,7 @@ export const getFriendRequests = async (
       },
     });
 
-    const acceptedRequests = await db.friendRequest.findMany({
+    const acceptedReqs = await db.friendRequest.findMany({
       where: { senderId: userId, status: "ACCEPTED" },
       include: {
         recipient: {
@@ -236,7 +237,7 @@ export const getFriendRequests = async (
       },
     });
 
-    res.status(200).json({ incomingReqs, acceptedRequests });
+    res.status(200).json({ incomingReqs, acceptedReqs });
   } catch (error) {
     console.error("Error in getFriendRequests controller", error);
     res.status(500).json({ message: "Internal Server Error" });

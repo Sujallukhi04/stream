@@ -10,6 +10,7 @@ export interface UserMain {
   friendIds: string[];
   friendOfIds: string[];
   isOnboarded: boolean;
+  receivedRequests: string[];
 }
 
 export interface UserData {

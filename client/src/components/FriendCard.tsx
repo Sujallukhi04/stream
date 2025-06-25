@@ -7,8 +7,8 @@ import { Badge } from "./ui/badge";
 
 const FriendCard = ({ friend }) => {
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-4">
+    <Card className="hover:shadow-md  transition-shadow">
+      <CardContent className="px-4">
         {/* USER INFO */}
         <div className="flex items-center gap-3 mb-3">
           <Avatar className="w-12 h-12 ">
